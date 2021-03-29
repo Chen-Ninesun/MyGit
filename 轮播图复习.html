@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			
+			.container{
+				width: 800px;
+				height: 400px;
+				position: relative;
+			}
+			.List{
+				width: 800px;
+				height: 400px;
+				margin: 0 auto;
+				padding-left: 0;
+				list-style: none;
+				overflow: hidden;
+				position: relative;
+			}
+			.item{
+				width: 800px;
+				height: 400px;
+				position: absolute;
+				opacity: 0;
+				transition: all 0.5s;
+			}
+			.item:nth-child(1){
+				background-color: blue;
+				/* z-index: 4;该标签必须在有定位的情况下生效 */
+			}
+			.item:nth-child(2){
+				background-color: yellow;
+			}
+			.item:nth-child(3){
+				background-color: red;
+			}
+			.item:nth-child(4){
+				background-color: palegreen;
+			}
+			.item:nth-child(5){
+				background-color: pink;
+			}
+			.item.active{
+				z-index: 1;
+				opacity: 1;
+			}
+			.item img{
+				width: 800px;
+				height: 400px;
+			}
+			.pointList{
+				position: absolute;
+				list-style: none;
+				z-index: 115;
+				bottom: 5px;
+				right: 120px;
+				right: 20px;
+			}
+			
+			.point{
+				width: 15px;
+				height: 15px;
+				background-color: black;
+				border-radius: 100%;
+				float: left;
+				border: 1.5px solid #FFFFFF  ;
+				cursor: pointer;
+				margin: 5px 10px;
+			}
+			.point.active{
+				background-color: white;
+				opacity: 0.9;
+			}
+			
+			.btn{
+				z-index: 99;
+				width: 20px;
+				height: 60px;
+				position: absolute;
+				top: 170px;
+				font-weight: 800;
+				font-family: "黑体";
+				opacity: 0.8;
+			}
+			#goNext{
+				right: 0px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<ul class="List">
+				<li class="item active" ><img src="img/p1.jpg" ></li>
+				<li class="item" ><img src="img/p2.jpg" ></li>
+				<li class="item" ><img src="img/p3.jpg" ></li>
+				<li class="item" ><img src="img/p4.jpg" ></li>
+				<li class="item" ><img src="img/p5.jpg" ></li>
+			</ul>
+			<ul class="pointList">
+				<li class="point active" data-index = "0" ></li>
+				<li class="point" data-index = '1'></li>
+				<li class="point" data-index = '2'></li>
+				<li class="point" data-index = '3'></li>
+				<li class="point" data-index = '4'></li>
+			</ul>
+			<button type="button" class="btn" id="goPre">↑</button>
+			<button type="button" class="btn" id="goNext">↓</button>
+		</div>
+		
+		<script type="text/javascript">
+			var items = document.getElementsByClassName("item"); //获取图片
+			var points = document.getElementsByClassName("point"); //获取点
+			var index = 0;//index表示第几张图片在展示--->第index张图片有active这个类名
+			var time = 0;//定时器图片跳转参数
+			
+			var goPreBtn = document.getElementById('goPre');
+			var goNextBtn = document.getElementById('goNext');
+			
+			
+			var clearIndex = function(){
+				for(var i = 0 ; i < items.length ; i++ ){
+					items[i].className = 'item';
+				}
+				for(var i = 0 ; i < points.length ; i++){
+					points[i].className = 'point';
+				}
+			}
+			var goIndex = function(){
+				clearIndex(); //清空
+				items[index].className = "item active";
+				points[index].className = "point active";
+			}
+			
+			for(var i = 0 ; i < points.length; i++){
+				points[i].addEventListener('click',function(){
+					var pointIndex = this.getAttribute('data-index');
+					index = pointIndex;
+					goIndex();
+				})
+			}
+			
+			//上一页
+			var goPre = function(){
+				if(index > 0)
+					index--;
+				else
+					index = 4;
+				goIndex();
+			}
+			goPreBtn.addEventListener('click',function(){
+				goPre();
+				time = 0; //清零
+			})
+
+			//下一页
+			var goNext = function(){
+				if(index < 4)
+					index++;
+				else
+					index = 0;
+				goIndex();
+			}
+			goNextBtn.addEventListener('click',function(){
+				goNext();
+				time = 0;
+			})						
+			
+			//2000ms跳转一次
+						
+			setInterval(function(){
+				time ++;
+				// console.log(time)
+				if(time >= 20){
+					goNext();		
+					time = 0;
+				}			
+			}, 100)
+			
+		</script>
+	</body>
+</html>
